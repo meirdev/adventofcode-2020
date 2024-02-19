@@ -1,5 +1,5 @@
-import itertools
 import functools
+import itertools
 
 
 def parse_input(input: str) -> list[list[str]]:
