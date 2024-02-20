@@ -21,20 +21,8 @@ def parse_input(input: str) -> dict[str, dict[str, int]]:
     return bag2bags
 
 
-def part1(input: str) -> int:
-    bag2bags = parse_input(input)
-
-    @functools.cache
-    def inner(bag: str) -> set[str]:
-        bags = set([bag])
-        for bag_ in bag2bags[bag]:
-            bags |= inner(bag_)
-        return bags
-
-    return sum(1 for bag in bag2bags if bag != SHINY_GOLD and SHINY_GOLD in inner(bag))
-
-
-def part2(input: str) -> int:
+@functools.cache
+def solution(input: str) -> dict[str, Counter[str]]:
     bag2bags = parse_input(input)
 
     @functools.cache
@@ -44,12 +32,26 @@ def part2(input: str) -> int:
             bags.update(inner(bag_, n_ * n))
         return bags
 
-    bags: Counter[str] = collections.Counter()
+    bags_counter: dict[str, Counter[str]] = {}
 
-    for bag, n in bag2bags[SHINY_GOLD].items():
-        bags.update(inner(bag, n))
+    for bag in bag2bags:
+        bags: Counter[str] = collections.Counter()
+        bags.update(inner(bag, 1))
+        bags_counter[bag] = bags
 
-    return bags.total()
+    return bags_counter
+
+
+def part1(input: str) -> int:
+    bags_counter = solution(input)
+
+    return sum(1 for bags in bags_counter.values() if SHINY_GOLD in bags) - 1
+
+
+def part2(input: str) -> int:
+    bags_counter = solution(input)
+
+    return bags_counter[SHINY_GOLD].total() - 1
 
 
 def main() -> None:
