@@ -25,32 +25,31 @@ def part1(input: str) -> int:
     }
 
     for _ in range(6):
-        y_min = min(cubes, key=lambda p: p[0])[0] - 1
-        y_max = max(cubes, key=lambda p: p[0])[0] + 1
-        x_min = min(cubes, key=lambda p: p[1])[1] - 1
-        x_max = max(cubes, key=lambda p: p[1])[1] + 1
-        z_min = min(cubes, key=lambda p: p[2])[2] - 1
-        z_max = max(cubes, key=lambda p: p[2])[2] + 1
+        limits = [
+            range(
+                min(cubes, key=lambda p: p[i])[i] - 1,
+                max(cubes, key=lambda p: p[i])[i] + 2,
+            )
+            for i in range(3)
+        ]
 
         temp_cubes = set()
 
-        for z in range(z_min, z_max + 1):
-            for y in range(y_min, y_max + 1):
-                for x in range(x_min, x_max + 1):
-                    cube = (y, x, z)
+        for y, x, z in itertools.product(*limits):
+            cube = (y, x, z)
 
-                    active = 0
+            active = 0
 
-                    for ny, nx, nz in neighbors:
-                        n_cube = (ny + y, nx + x, nz + z)
+            for ny, nx, nz in neighbors:
+                n_cube = (ny + y, nx + x, nz + z)
 
-                        if n_cube in cubes:
-                            active += 1
+                if n_cube in cubes:
+                    active += 1
 
-                    if (cube in cubes and active in [2, 3]) or (
-                        cube not in cubes and active == 3
-                    ):
-                        temp_cubes.add(cube)
+            if (cube in cubes and active in [2, 3]) or (
+                cube not in cubes and active == 3
+            ):
+                temp_cubes.add(cube)
 
         cubes = temp_cubes
 
@@ -71,35 +70,31 @@ def part2(input: str) -> int:
     }
 
     for _ in range(6):
-        y_min = min(cubes, key=lambda p: p[0])[0] - 1
-        y_max = max(cubes, key=lambda p: p[0])[0] + 1
-        x_min = min(cubes, key=lambda p: p[1])[1] - 1
-        x_max = max(cubes, key=lambda p: p[1])[1] + 1
-        z_min = min(cubes, key=lambda p: p[2])[2] - 1
-        z_max = max(cubes, key=lambda p: p[2])[2] + 1
-        w_min = min(cubes, key=lambda p: p[3])[3] - 1
-        w_max = max(cubes, key=lambda p: p[3])[3] + 1
+        limits = [
+            range(
+                min(cubes, key=lambda p: p[i])[i] - 1,
+                max(cubes, key=lambda p: p[i])[i] + 2,
+            )
+            for i in range(4)
+        ]
 
         temp_cubes = set()
 
-        for w in range(w_min, w_max + 1):
-            for z in range(z_min, z_max + 1):
-                for y in range(y_min, y_max + 1):
-                    for x in range(x_min, x_max + 1):
-                        cube = (y, x, z, w)
+        for y, x, z, w in itertools.product(*limits):
+            cube = (y, x, z, w)
 
-                        active = 0
+            active = 0
 
-                        for ny, nx, nz, nw in neighbors:
-                            n_cube = (ny + y, nx + x, nz + z, nw + w)
+            for ny, nx, nz, nw in neighbors:
+                n_cube = (ny + y, nx + x, nz + z, nw + w)
 
-                            if n_cube in cubes:
-                                active += 1
+                if n_cube in cubes:
+                    active += 1
 
-                        if (cube in cubes and active in [2, 3]) or (
-                            cube not in cubes and active == 3
-                        ):
-                            temp_cubes.add(cube)
+            if (cube in cubes and active in [2, 3]) or (
+                cube not in cubes and active == 3
+            ):
+                temp_cubes.add(cube)
 
         cubes = temp_cubes
 
